@@ -28,83 +28,83 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Employee employee = new Employee("", "", "", "");
 
- Employee employee = new Employee("", "", "", "");
-  
-String firstname; 
-String lastname;
-String emailId;
-String mobileno;
-final scaffoldKey = new GlobalKey<ScaffoldState>();
-final formKey = new GlobalKey<FormState>();
+  String firstname;
+  String lastname;
+  String emailId;
+  String mobileno;
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final formKey = new GlobalKey<FormState>();
 
+  bool _boolAutoValidate = false;
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
       key: scaffoldKey,
-      appBar: new AppBar(
-        title: new Text('Saving Employee'),
-        actions: <Widget>[
-            new IconButton(
-              icon: const Icon(Icons.view_list),
-              tooltip: 'Next choice',
-              onPressed: () {
-              navigateToEmployeeList();
-              },
-            ),
-          ]
-      ),
+      appBar: new AppBar(title: new Text('Saving Employee'), actions: <Widget>[
+        new IconButton(
+          icon: const Icon(Icons.view_list),
+          tooltip: 'Next choice',
+          onPressed: () {
+            navigateToEmployeeList();
+          },
+        ),
+      ]),
       body: new Padding(
         padding: const EdgeInsets.all(16.0),
         child: new Form(
           key: formKey,
+          autovalidate: _boolAutoValidate,
           child: new Column(
             children: [
               new TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(labelText: 'First Name'),
-                validator: (val) =>
-                    val.length == 0 ?"Enter FirstName" : null,
+                validator: (val) => val.length == 0 ? "Enter FirstName" : null,
                 onSaved: (val) => this.firstname = val,
               ),
               new TextFormField(
                 keyboardType: TextInputType.text,
                 decoration: new InputDecoration(labelText: 'Last Name'),
-                validator: (val) =>
-                    val.length ==0 ? 'Enter LastName' : null,
+                validator: (val) => val.length == 0 ? 'Enter LastName' : null,
                 onSaved: (val) => this.lastname = val,
               ),
               new TextFormField(
                 keyboardType: TextInputType.phone,
                 decoration: new InputDecoration(labelText: 'Mobile No'),
-                validator: (val) =>
-                    val.length ==0 ? 'Enter Mobile No' : null,
+                validator: (val) => val.length == 0 ? 'Enter Mobile No' : null,
                 onSaved: (val) => this.mobileno = val,
               ),
               new TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 decoration: new InputDecoration(labelText: 'Email Id'),
-                validator: (val) =>
-                    val.length ==0 ? 'Enter Email Id' : null,
+                validator: (val) => val.length == 0 ? 'Enter Email Id' : null,
                 onSaved: (val) => this.emailId = val,
               ),
-              new Container(margin: const EdgeInsets.only(top: 10.0),child: new RaisedButton(onPressed: _submit,
-                child: new Text('Login'),),)
-              
+              new Container(
+                margin: const EdgeInsets.only(top: 10.0),
+                child: new RaisedButton(
+                  onPressed: _submit,
+                  child: new Text('Login'),
+                ),
+              )
             ],
           ),
         ),
       ),
     );
   }
+
   void _submit() {
-     if (this.formKey.currentState.validate()) {
-      formKey.currentState.save(); 
-     }else{
-       return null;
-     }
-    var employee = Employee(firstname,lastname,mobileno,emailId);
+    if (this.formKey.currentState.validate()) {
+      formKey.currentState.save();
+    } else {
+      _boolAutoValidate = true;
+      return null;
+    }
+    var employee = Employee(firstname, lastname, mobileno, emailId);
     var dbHelper = DBHelper();
     dbHelper.saveEmployee(employee);
     _showSnackBar("Data saved successfully");
@@ -115,10 +115,10 @@ final formKey = new GlobalKey<FormState>();
         .showSnackBar(new SnackBar(content: new Text(text)));
   }
 
-  void navigateToEmployeeList(){
-     Navigator.push(
-    context,
-    new MaterialPageRoute(builder: (context) => new MyEmployeeList()),
-  );
+  void navigateToEmployeeList() {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => new MyEmployeeList()),
+    );
   }
 }
